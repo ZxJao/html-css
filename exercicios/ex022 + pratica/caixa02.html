@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grouping tags</title>
+    <style>
+        body {
+           font-family: Arial, Helvetica, sans-serif;
+           background-color: aqua;
+           margin: 0px;            
+        }
+        header {
+            background-color: mintcream;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        nav {
+            background-color: rgb(237, 247, 239);
+            padding: 3px;
+            box-shadow: 10px 5px 10px rgba(0, 0, 0, 0.329);
+        }
+
+        nav > a {
+            text-decoration: none;
+            color: rgb(21, 231, 1);
+            font-weight: bold;
+            margin-right: 30px;
+        }
+
+        nav > a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            background-color: rgb(0, 0, 0);
+            color: white;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px 10px;
+            box-shadow: 10px 5px 10px rgba(97, 107, 99, 0.671);
+        }
+
+        article {
+            background-color: gray;
+            padding: 5px;
+        }
+
+        article > anside {
+            background-color: lightgray;
+        }
+
+        footer {
+            background-color: rgb(0, 0, 0);
+            color: white;
+            text-align: center;
+            padding: 4px;
+            margin: 0px;
+        }
+
+        footer > p {
+            margin: 0px;
+        }
+
+        div#bola {
+            height: 100px;
+            width: 100px;
+            background-color: rgb(255, 255, 255);
+            border-radius: 50%;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Meu site</h1>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Sobre</a>
+            <a href="#">Contato</a>
+        </nav>
+    </header>
+    <main>
+        <section id="assuntos">
+               <p>Esportes Politicas Tecnologia</p>
+        </section>
+        <section id="noticias">
+            <article>
+                <h2>Noticia sobre o mundo</h2>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit sed tempora illo quidem tempore et pariatur, error aliquam sapiente repellendus expedita cumque repellat, quisquam labore sint quas esse cum voluptatum.</p>
+                <aside>
+                    <p>artigo escrito por joao</p>
+                </aside>
+            </article>
+            <article>
+
+            </article>
+        </section>
+    </main>
+    <footer>
+        <p>Desenvolvido por Joao</p>
+    </footer>
+    <div id="bola"></div>
+</body>
+</html>

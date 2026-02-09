@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercicio</title>
+    <style>
+        html, body { height: 100%; margin: 0; }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f9f9f9;
+        }
+        .container { text-align: center; padding: 20px; }
+        .videos {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .video-link { position: relative; display: inline-block; cursor: pointer; }
+        .video-link iframe { pointer-events: none; max-width: 100%; border-radius: 6px; display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>videos legais para assistir</h1>
+        <div class="videos">
+            <a class="video-link" href="pag2.html?v=gqrySQQzvvQ" aria-label="Abrir vídeo 1">
+                <iframe width="380" height="320" src="https://www.youtube.com/embed/gqrySQQzvvQ?si=X3HIHWcnzfwuVrka" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </a>
+            <a class="video-link" href="pag2.html?v=Ejkb_YpuHWs" aria-label="Abrir vídeo 2">
+                <iframe width="380" height="320" src="https://www.youtube.com/embed/Ejkb_YpuHWs?si=DGc4wopn9fa7bXtF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </a>
+            <a class="video-link" href="pag2.html?v=jgQjeqGRdgA" aria-label="Abrir vídeo 3">
+                <iframe width="380" height="320" src="https://www.youtube.com/embed/jgQjeqGRdgA?si=y5r22HCKBzsg7RfQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

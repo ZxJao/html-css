@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caverna Minecraft Interativa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Fundo da Caverna com gradiente melhorado */
+        .caverna {
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 50% 50%, #1a1a1a 0%, #0a0a0a 50%, #000 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Camada de luz ambiente */
+        .caverna::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 20%, rgba(100, 100, 100, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Blocos de pedra da caverna com texturas 3D */
+        .pedra {
+            position: absolute;
+            background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 50%, #1a1a1a 100%);
+            border-top: 2px solid #6a6a6a;
+            border-left: 2px solid #6a6a6a;
+            border-bottom: 2px solid #0a0a0a;
+            border-right: 2px solid #0a0a0a;
+            box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.1), 
+                        inset -1px -1px 3px rgba(0, 0, 0, 0.8),
+                        3px 3px 8px rgba(0, 0, 0, 0.8);
+            filter: brightness(0.9);
+        }
+
+        /* Tochas decorativas */
+        .tocha {
+            position: absolute;
+            width: 6px;
+            height: 15px;
+            background: linear-gradient(180deg, #8B4513 0%, #654321 100%);
+            border: 1px solid #4a2c0a;
+        }
+
+        .tocha-fogo {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle at 30% 30%, #ffff00, #ff8800, #ff4500);
+            top: -12px;
+            left: -3px;
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: tochaFogo 0.6s ease-in-out infinite;
+            box-shadow: 0 0 15px #ff6600, 0 0 25px #ff4500;
+        }
+
+        @keyframes tochaFogo {
+            0%, 100% { transform: scaleY(1) scaleX(1); }
+            50% { transform: scaleY(1.2) scaleX(0.9); }
+        }
+
+        /* Lava no fundo com efeito realista */
+        .lava {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(180deg, 
+                #ff6b00 0%, 
+                #ff4500 30%, 
+                #ff2500 60%, 
+                #cc1100 100%);
+            animation: lavaWave 2.5s ease-in-out infinite;
+            border-top: 4px solid #ff8c00;
+            opacity: 0.95;
+            box-shadow: inset 0 -20px 30px rgba(0, 0, 0, 0.5),
+                        0 0 50px rgba(255, 100, 0, 0.6);
+        }
+
+        .lava::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.1) 25%, 
+                rgba(255, 255, 255, 0.05) 50%, 
+                rgba(255, 255, 255, 0.1) 75%, 
+                transparent 100%);
+            animation: lavaOndas 1.5s linear infinite;
+        }
+
+        @keyframes lavaWave {
+            0%, 100% { transform: scaleY(1) translateY(0); }
+            50% { transform: scaleY(1.15) translateY(-5px); }
+        }
+
+        @keyframes lavaOndas {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Minério na caverna com brilho */
+        .minerio {
+            position: absolute;
+            background: radial-gradient(circle at 35% 35%, #ffff00, #ffcc00, #ff8800);
+            border-radius: 50%;
+            box-shadow: inset -3px -3px 6px rgba(0, 0, 0, 0.6),
+                        0 0 20px rgba(255, 200, 0, 0.8),
+                        0 0 30px rgba(255, 150, 0, 0.5);
+            border: 2px solid #ffaa00;
+            filter: brightness(1.1);
+        }
+
+        /* Diamante brilhante */
+        .diamante {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #00ffff, #00aaff);
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 50% 85%, 18% 100%, 0% 38%);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.9),
+                        inset -2px -2px 5px rgba(0, 0, 0, 0.3),
+                        0 0 15px rgba(100, 255, 255, 0.6);
+            animation: diamantePulso 2s ease-in-out infinite;
+        }
+
+        @keyframes diamantePulso {
+            0%, 100% { box-shadow: 0 0 25px rgba(0, 255, 255, 0.9), inset -2px -2px 5px rgba(0, 0, 0, 0.3), 0 0 15px rgba(100, 255, 255, 0.6); }
+            50% { box-shadow: 0 0 35px rgba(0, 255, 255, 1), inset -2px -2px 5px rgba(0, 0, 0, 0.3), 0 0 25px rgba(100, 255, 255, 0.8); }
+        }
+
+        /* Personagem Steve do Minecraft - Versão Melhorada */
+        .steve {
+            position: absolute;
+            width: 50px;
+            height: 60px;
+            cursor: grab;
+            user-select: none;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.8));
+        }
+
+        .steve.grab {
+            cursor: grabbing;
+            filter: drop-shadow(0 8px 15px rgba(255, 200, 0, 0.6));
+        }
+
+        /* Cabeça do Steve - Versão 3D */
+        .steve-cabeca {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            top: 0;
+            background: linear-gradient(135deg, #d4a574 0%, #b89968 40%, #8b6f47 100%);
+            border-top: 3px solid #e8c8a0;
+            border-left: 3px solid #e8c8a0;
+            border-right: 3px solid #6b5d42;
+            border-bottom: 3px solid #6b5d42;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2),
+                        inset 0 0 15px rgba(0, 0, 0, 0.4),
+                        0 5px 15px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Nariz do Steve */
+        .steve-nariz {
+            position: absolute;
+            width: 10px;
+            height: 12px;
+            background: linear-gradient(90deg, #b89968, #9b7d5a);
+            top: 18px;
+            left: 20px;
+            border: 1px solid #7a6a52;
+        }
+
+        /* Olhos brilhantes */
+        .steve-olho {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #1a1a1a, #000);
+            top: 12px;
+            border: 1px solid #000;
+            box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.8),
+                        0 0 5px rgba(0, 0, 0, 0.8);
+        }
+
+        .steve-olho::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            top: 1px;
+            left: 1px;
+            border-radius: 50%;
+        }
+
+        .steve-olho:first-of-type {
+            left: 8px;
+        }
+
+        .steve-olho:last-of-type {
+            right: 8px;
+        }
+
+        /* Corpo - Versão 3D */
+        .steve-corpo {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            top: 50px;
+            background: linear-gradient(135deg, #4a7a4a 0%, #2d5a2d 40%, #1f3f1f 100%);
+            border-top: 3px solid #6a9a6a;
+            border-left: 3px solid #6a9a6a;
+            border-right: 3px solid #1a2f1a;
+            border-bottom: 3px solid #1a2f1a;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1),
+                        inset 0 0 15px rgba(0, 0, 0, 0.5),
+                        0 5px 15px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Braços animados - Versão 3D */
+        .steve-braco {
+            position: absolute;
+            width: 12px;
+            height: 35px;
+            background: linear-gradient(90deg, #c4a574, #b89968, #9b7d5a);
+            top: 50px;
+            animation: braco 0.8s ease-in-out infinite;
+            transform-origin: top center;
+            border: 1px solid #8b7a68;
+            box-shadow: inset 1px 0 3px rgba(255, 255, 255, 0.3),
+                        -1px 0 3px rgba(0, 0, 0, 0.5),
+                        3px 3px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .steve-braco-esq {
+            left: -12px;
+            animation-delay: 0s;
+        }
+
+        .steve-braco-dir {
+            right: -12px;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes braco {
+            0%, 100% { transform: rotateZ(-10deg); }
+            50% { transform: rotateZ(35deg); }
+        }
+
+        /* Pernas */
+        .steve-perna {
+            position: absolute;
+            width: 12px;
+            height: 25px;
+            background: linear-gradient(90deg, #3a5a8a, #2a4a7a, #1a3a6a);
+            top: 100px;
+            border: 1px solid #1a3a6a;
+            box-shadow: inset 1px 0 2px rgba(100, 150, 200, 0.3),
+                        -1px 0 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .steve-perna-esq {
+            left: 10px;
+            animation: perna 0.8s ease-in-out infinite;
+        }
+
+        .steve-perna-dir {
+            right: 10px;
+            animation: perna 0.8s ease-in-out infinite;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes perna {
+            0%, 100% { transform: rotateZ(-5deg); }
+            50% { transform: rotateZ(10deg); }
+        }
+
+        /* INIMIGOS - Creeper */
+        .creeper {
+            position: absolute;
+            width: 50px;
+            height: 60px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8));
+        }
+
+        .creeper-corpo {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4a7a4a 0%, #2d5a2d 40%, #1f3f1f 100%);
+            border-top: 3px solid #6a9a6a;
+            border-left: 3px solid #6a9a6a;
+            border-right: 3px solid #1a2f1a;
+            border-bottom: 3px solid #1a2f1a;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1), inset 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .creeper-cabeca {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #5a8a5a, #3d5d3d);
+            top: -20px;
+            left: 15px;
+            border: 1px solid #2a4a2a;
+        }
+
+        .creeper-olho {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #000;
+            top: 4px;
+        }
+
+        .creeper-olho:first-of-type {
+            left: 4px;
+        }
+
+        .creeper-olho:last-of-type {
+            right: 4px;
+        }
+
+        .creeper-perna {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            background: linear-gradient(90deg, #3a6a3a, #2d5d2d);
+            bottom: -20px;
+            border: 1px solid #1a4a1a;
+        }
+
+        .creeper-perna-esq {
+            left: 8px;
+        }
+
+        .creeper-perna-dir {
+            right: 8px;
+        }
+
+        /* INIMIGOS - Zumbi */
+        .zumbi {
+            position: absolute;
+            width: 50px;
+            height: 70px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8));
+            opacity: 0.95;
+        }
+
+        .zumbi-cabeca {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            top: 0;
+            background: linear-gradient(135deg, #7a9a7a 0%, #5a7a5a 40%, #3a5a3a 100%);
+            border-top: 2px solid #9aba9a;
+            border-left: 2px solid #9aba9a;
+            border-right: 2px solid #3a5a3a;
+            border-bottom: 2px solid #3a5a3a;
+            box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1), inset 0 0 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .zumbi-olho {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle at 30% 30%, #ffff00, #ff8800);
+            top: 12px;
+            border: 1px solid #000;
+            box-shadow: 0 0 8px rgba(255, 150, 0, 0.8);
+        }
+
+        .zumbi-olho:first-of-type {
+            left: 10px;
+        }
+
+        .zumbi-olho:last-of-type {
+            right: 10px;
+        }
+
+        .zumbi-corpo {
+            position: absolute;
+            width: 50px;
+            height: 35px;
+            top: 45px;
+            background: linear-gradient(135deg, #7a7a4a 0%, #5a5a3a 40%, #3a3a2a 100%);
+            border-top: 2px solid #9a9a6a;
+            border-left: 2px solid #9a9a6a;
+            border-right: 2px solid #3a3a2a;
+            border-bottom: 2px solid #3a3a2a;
+            box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1);
+        }
+
+        .zumbi-perna {
+            position: absolute;
+            width: 12px;
+            height: 25px;
+            background: linear-gradient(90deg, #3a3a2a, #2a2a1a);
+            bottom: 0;
+        }
+
+        .zumbi-perna-esq {
+            left: 12px;
+        }
+
+        .zumbi-perna-dir {
+            right: 12px;
+        }
+
+        /* Barra de Saúde */
+        .saude-bar {
+            position: absolute;
+            width: 60px;
+            height: 8px;
+            background: linear-gradient(90deg, #ff3333, #ff6666);
+            border: 1px solid #000;
+            border-radius: 4px;
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+            top: -15px;
+            left: -5px;
+            overflow: hidden;
+        }
+
+        .saude-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00aa00);
+            width: 100%;
+            border-radius: 3px;
+            transition: width 0.2s ease;
+        }
+
+        /* Efeito de dano */
+        .dano {
+            position: absolute;
+            color: #ff3333;
+            font-size: 20px;
+            font-weight: bold;
+            pointer-events: none;
+            animation: danoCair 1s ease-out forwards;
+            text-shadow: 0 0 5px #ff0000;
+        }
+
+        @keyframes danoCair {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.8);
+            }
+        }
+
+        /* Efeito de ataque */
+        @keyframes ataqueFlash {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .atacando {
+            animation: ataqueFlash 0.2s ease !important;
+        }
+
+        /* Info e Controles */
+        .info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.9));
+            color: #0f0;
+            padding: 15px;
+            border: 2px solid #0f0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            z-index: 100;
+            max-width: 300px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .info h2 {
+            color: #0f0;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-shadow: 0 0 10px #0f0;
+        }
+
+        .controles {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.9));
+            color: #0f0;
+            padding: 15px;
+            border: 2px solid #0f0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .controles h3 {
+            color: #0f0;
+            margin-bottom: 8px;
+            font-size: 13px;
+            text-shadow: 0 0 10px #0f0;
+        }
+
+        .controles p {
+            margin: 5px 0;
+        }
+
+        /* HUD Melhorado */
+        .hud {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 20, 0.95));
+            color: #0f0;
+            padding: 15px;
+            border: 2px solid #ff3333;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.5);
+            min-width: 250px;
+        }
+
+        .hud h3 {
+            color: #ff3333;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-shadow: 0 0 10px #ff3333;
+        }
+
+        .hud-item {
+            margin: 8px 0;
+            font-size: 12px;
+        }
+
+        .saude-steve {
+            color: #ff3333;
+            margin: 8px 0;
+        }
+
+        .saude-bar-steve {
+            width: 100%;
+            height: 12px;
+            background: #1a1a1a;
+            border: 1px solid #ff3333;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 4px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8);
+        }
+
+        .saude-fill-steve {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00aa00);
+            width: 100%;
+            border-radius: 1px;
+            transition: width 0.3s ease;
+        }
+
+        .inimigos-count {
+            color: #ff8800;
+            margin: 8px 0;
+        }
+
+        /* Partículas de queda */
+        .particula {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            animation: cair 2.5s ease-in forwards;
+            filter: drop-shadow(0 0 8px rgba(255, 200, 0, 0.6));
+        }
+
+        @keyframes cair {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(150px) rotate(720deg) scale(0.5);
+            }
+        }
+
+        /* Título flutuante */
+        .titulo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #0f0;
+            text-shadow: 0 0 15px #0f0, 0 0 25px rgba(0, 255, 0, 0.5), 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            z-index: 50;
+            animation: tituloFlutua 3s ease-in-out infinite;
+        }
+
+        @keyframes tituloFlutua {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="caverna" id="caverna">
+            <div class="titulo">⛏ CAVERNA MINECRAFT ⛏</div>
+            <div class="lava"></div>
+            
+            <div class="steve" id="steve">
+                <div class="steve-cabeca">
+                    <div class="steve-nariz"></div>
+                    <div class="steve-olho"></div>
+                    <div class="steve-olho"></div>
+                </div>
+                <div class="steve-corpo"></div>
+                <div class="steve-braco steve-braco-esq"></div>
+                <div class="steve-braco-dir"></div>
+                <div class="steve-perna steve-perna-esq"></div>
+                <div class="steve-perna steve-perna-dir"></div>
+            </div>
+
+            <div class="info">
+                <h2>📊 INFORMAÇÕES</h2>
+                <p>Posição X: <span id="posX">0</span>px</p>
+                <p>Posição Y: <span id="posY">0</span>px</p>
+                <p>Velocidade: <span id="velocidade">0</span>px/s</p>
+            </div>
+
+            <div class="hud">
+                <h3>⚔️ STATUS DO COMBATE</h3>
+                <div class="saude-steve">
+                    ❤️ Saúde: <span id="saudeSteveText">100</span>/100
+                    <div class="saude-bar-steve">
+                        <div class="saude-fill-steve" id="saudeSteveBar"></div>
+                    </div>
+                </div>
+                <div class="inimigos-count">
+                    👹 Inimigos: <span id="inimigosCont">0</span>
+                </div>
+                <div class="hud-item" id="ultimoAtaque" style="color: #ffff00;">
+                    Dano Total: <span id="danoTotal">0</span>
+                </div>
+            </div>
+
+            <div class="controles">
+                <h3>⌨️ CONTROLES</h3>
+                <p>🖱️ Clique e arraste para mover</p>
+                <p>⌨️ Setas ou WASD para mover</p>
+                <p>ESPAÇO para pular</p>
+                <p>Clique duplo = super pulo</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const steve = document.getElementById('steve');
+        const caverna = document.getElementById('caverna');
+        const posXSpan = document.getElementById('posX');
+        const posYSpan = document.getElementById('posY');
+        const velocidadeSpan = document.getElementById('velocidade');
+        const saudeSteveText = document.getElementById('saudeSteveText');
+        const saudeSteveBar = document.getElementById('saudeSteveBar');
+        const inimigosCont = document.getElementById('inimigosCont');
+        const danoTotal = document.getElementById('danoTotal');
+
+        let x = window.innerWidth / 2 - 20;
+        let y = window.innerHeight / 2 - 25;
+        let velocidadeX = 0;
+        let velocidadeY = 0;
+        let emGravidade = true;
+        let arrastando = false;
+        let ultimoX = x;
+        let ultimoY = y;
+        const gravidade = 0.6;
+        const velocidadeMaxima = 15;
+        const limiteInferior = window.innerHeight - 130;
+
+        // SISTEMA DE SAÚDE
+        let saudeSteve = 100;
+        let saudeMaxima = 100;
+        let danoTotalAcumulado = 0;
+        let inimigosList = [];
+
+        // CLASSE INIMIGO
+        class Inimigo {
+            constructor(tipo, x, y) {
+                this.tipo = tipo; // 'creeper' ou 'zumbi'
+                this.x = x;
+                this.y = y;
+                this.velocidadeX = (Math.random() - 0.5) * 4;
+                this.velocidadeY = 0;
+                this.saude = tipo === 'creeper' ? 30 : 50;
+                this.saudeMax = this.saude;
+                this.elemento = this.criar();
+                this.agressividadeContador = 0;
+                this.esperandoAtaque = false;
+            }
+
+            criar() {
+                const div = document.createElement('div');
+                div.className = this.tipo;
+
+                if (this.tipo === 'creeper') {
+                    div.innerHTML = `
+                        <div class="creeper-corpo">
+                            <div class="creeper-cabeca">
+                                <div class="creeper-olho"></div>
+                                <div class="creeper-olho"></div>
+                            </div>
+                        </div>
+                        <div class="creeper-perna creeper-perna-esq"></div>
+                        <div class="creeper-perna creeper-perna-dir"></div>
+                        <div class="saude-bar">
+                            <div class="saude-fill"></div>
+                        </div>
+                    `;
+                } else if (this.tipo === 'zumbi') {
+                    div.innerHTML = `
+                        <div class="zumbi-cabeca">
+                            <div class="zumbi-olho"></div>
+                            <div class="zumbi-olho"></div>
+                        </div>
+                        <div class="zumbi-corpo"></div>
+                        <div class="zumbi-perna zumbi-perna-esq"></div>
+                        <div class="zumbi-perna zumbi-perna-dir"></div>
+                        <div class="saude-bar">
+                            <div class="saude-fill"></div>
+                        </div>
+                    `;
+                }
+
+                div.style.left = this.x + 'px';
+                div.style.top = this.y + 'px';
+                caverna.appendChild(div);
+                return div;
+            }
+
+            atualizar() {
+                // Movimento
+                this.velocidadeY += gravidade;
+                this.x += this.velocidadeX;
+                this.y += this.velocidadeY;
+
+                // Limites horizontais
+                if (this.x < 0) {
+                    this.x = 0;
+                    this.velocidadeX = Math.abs(this.velocidadeX) * 0.7;
+                }
+                if (this.x > window.innerWidth - 40) {
+                    this.x = window.innerWidth - 40;
+                    this.velocidadeX = -Math.abs(this.velocidadeX) * 0.7;
+                }
+
+                // Gravidade
+                if (this.y > limiteInferior) {
+                    this.y = limiteInferior;
+                    this.velocidadeY = 0;
+
+                    // IA: Saltar aleatoriamente
+                    if (Math.random() > 0.95) {
+                        this.velocidadeY = -10;
+                    }
+                }
+
+                // IA: Perseguir Steve
+                const distX = x - this.x;
+                const distY = y - this.y;
+                const distancia = Math.sqrt(distX * distX + distY * distY);
+
+                if (distancia < 300) {
+                    // Movimento em direção ao Steve
+                    this.velocidadeX = (distX > 0 ? 2 : -2);
+
+                    // Atacar se perto
+                    if (distancia < 60 && !this.esperandoAtaque) {
+                        this.atacarSteve();
+                    }
+                }
+
+                // Atrito
+                this.velocidadeX *= 0.95;
+
+                this.elemento.style.left = this.x + 'px';
+                this.elemento.style.top = this.y + 'px';
+
+                // Flip horizontal
+                if (this.velocidadeX !== 0) {
+                    this.elemento.style.transform = this.velocidadeX > 0 ? 'scaleX(1)' : 'scaleX(-1)';
+                }
+
+                // Atualizar barra de saúde
+                const barraFill = this.elemento.querySelector('.saude-fill');
+                barraFill.style.width = (this.saude / this.saudeMax * 100) + '%';
+            }
+
+            atacarSteve() {
+                this.esperandoAtaque = true;
+                this.elemento.classList.add('atacando');
+                const dano = this.tipo === 'creeper' ? 8 : 5;
+                
+                saudeSteve -= dano;
+                danoTotalAcumulado += dano;
+                atualizarUI();
+
+                // Efeito de dano no Steve
+                criarEfeitoDano(x + 25, y, dano);
+
+                setTimeout(() => {
+                    this.elemento.classList.remove('atacando');
+                    this.esperandoAtaque = false;
+                }, 1000);
+            }
+
+            levarDano(dano) {
+                this.saude -= dano;
+                this.elemento.classList.add('atacando');
+                criarEfeitoDano(this.x + 25, this.y, dano);
+
+                setTimeout(() => {
+                    this.elemento.classList.remove('atacando');
+                }, 200);
+
+                return this.saude <= 0;
+            }
+
+            morrer() {
+                criarParticula(this.x, this.y, '💥');
+                criarParticula(this.x, this.y, '💀');
+                this.elemento.remove();
+            }
+        }
+
+        function criarEfeitoDano(px, py, dano) {
+            const danoDiv = document.createElement('div');
+            danoDiv.className = 'dano';
+            danoDiv.textContent = '-' + dano;
+            danoDiv.style.left = px + 'px';
+            danoDiv.style.top = py + 'px';
+            caverna.appendChild(danoDiv);
+            setTimeout(() => danoDiv.remove(), 1000);
+        }
+
+        function atualizarUI() {
+            saudeSteveText.textContent = Math.max(0, saudeSteve);
+            saudeSteveBar.style.width = (Math.max(0, saudeSteve) / saudeMaxima * 100) + '%';
+            inimigosCont.textContent = inimigosList.length;
+            danoTotal.textContent = danoTotalAcumulado;
+
+            // Piscar vermelho se saúde baixa
+            if (saudeSteve < 30) {
+                document.querySelector('.hud').style.borderColor = '#ff0000';
+                document.querySelector('.hud h3').style.color = '#ff0000';
+            } else {
+                document.querySelector('.hud').style.borderColor = '#ff3333';
+                document.querySelector('.hud h3').style.color = '#ff3333';
+            }
+        }
+
+        function gerarCaverna() {
+            for (let i = 0; i < 45; i++) {
+                const pedra = document.createElement('div');
+                pedra.className = 'pedra';
+                const tamanho = Math.random() * 80 + 30;
+                pedra.style.width = tamanho + 'px';
+                pedra.style.height = tamanho * (Math.random() * 0.6 + 0.4) + 'px';
+                pedra.style.left = Math.random() * window.innerWidth + 'px';
+                pedra.style.top = Math.random() * window.innerHeight + 'px';
+                caverna.appendChild(pedra);
+            }
+
+            // Minérios de ouro
+            for (let i = 0; i < 10; i++) {
+                const minerio = document.createElement('div');
+                minerio.className = 'minerio';
+                const tamanho = Math.random() * 20 + 12;
+                minerio.style.width = tamanho + 'px';
+                minerio.style.height = tamanho + 'px';
+                minerio.style.left = Math.random() * window.innerWidth + 'px';
+                minerio.style.top = Math.random() * (window.innerHeight - 150) + 'px';
+                caverna.appendChild(minerio);
+            }
+
+            // Diamantes
+            for (let i = 0; i < 6; i++) {
+                const diamante = document.createElement('div');
+                diamante.className = 'diamante';
+                diamante.style.left = Math.random() * window.innerWidth + 'px';
+                diamante.style.top = Math.random() * (window.innerHeight - 200) + 'px';
+                caverna.appendChild(diamante);
+            }
+
+            // Tochas
+            for (let i = 0; i < 8; i++) {
+                const tocha = document.createElement('div');
+                tocha.className = 'tocha';
+                tocha.style.left = Math.random() * window.innerWidth + 'px';
+                tocha.style.top = Math.random() * (window.innerHeight - 200) + 'px';
+                
+                const tochaFogo = document.createElement('div');
+                tochaFogo.className = 'tocha-fogo';
+                tocha.appendChild(tochaFogo);
+                
+                caverna.appendChild(tocha);
+            }
+        }
+
+        // Atualizar posição
+        function atualizar() {
+            // Gravidade
+            if (emGravidade) {
+                velocidadeY += gravidade;
+            }
+
+            // Limitar velocidade
+            if (velocidadeX > velocidadeMaxima) velocidadeX = velocidadeMaxima;
+            if (velocidadeX < -velocidadeMaxima) velocidadeX = -velocidadeMaxima;
+            if (velocidadeY > velocidadeMaxima * 2) velocidadeY = velocidadeMaxima * 2;
+
+            // Atualizar posição
+            x += velocidadeX;
+            y += velocidadeY;
+
+            // Limites horizontais
+            if (x < 0) {
+                x = 0;
+                velocidadeX = Math.abs(velocidadeX) * 0.5;
+            }
+            if (x > window.innerWidth - 40) {
+                x = window.innerWidth - 40;
+                velocidadeX = -Math.abs(velocidadeX) * 0.5;
+            }
+
+            // Colisão com lava/chão
+            if (y > limiteInferior) {
+                y = limiteInferior;
+                velocidadeY = 0;
+                emGravidade = false;
+            } else {
+                emGravidade = true;
+            }
+
+            // Aplicar atrito
+            velocidadeX *= 0.95;
+
+            // Atualizar estilo
+            steve.style.left = x + 'px';
+            steve.style.top = y + 'px';
+
+            // Atualizar spans de informação
+            posXSpan.textContent = Math.round(x);
+            posYSpan.textContent = Math.round(y);
+            velocidadeSpan.textContent = Math.round(Math.sqrt(velocidadeX ** 2 + velocidadeY ** 2));
+
+            // Verificar colisão com inimigos
+            for (let i = inimigosList.length - 1; i >= 0; i--) {
+                inimigosList[i].atualizar();
+            }
+
+            // Verificar morte
+            if (saudeSteve <= 0) {
+                steve.style.opacity = '0.5';
+                steve.style.pointerEvents = 'none';
+            }
+        }
+
+        // SISTEMA DE ATAQUE
+        let cooldownAtaque = 0;
+
+        document.addEventListener('click', (e) => {
+            if (cooldownAtaque > 0 || saudeSteve <= 0) return;
+
+            cooldownAtaque = 300; // 300ms de cooldown
+
+            // Efeito de ataque
+            steve.classList.add('atacando');
+            criarParticula(x + 25, y, '⚔️');
+
+            // Verificar inimigos próximos
+            for (let i = inimigosList.length - 1; i >= 0; i--) {
+                const inimigo = inimigosList[i];
+                const distX = inimigo.x - x;
+                const distY = inimigo.y - y;
+                const distancia = Math.sqrt(distX * distX + distY * distY);
+
+                // Alcance do ataque
+                if (distancia < 80) {
+                    const dano = Math.floor(Math.random() * 10) + 8; // 8-17 dano
+                    
+                    if (inimigo.levarDano(dano)) {
+                        inimigo.morrer();
+                        inimigosList.splice(i, 1);
+                        criarParticula(inimigo.x, inimigo.y, '💰');
+                        danoTotalAcumulado += dano;
+                        atualizarUI();
+                    }
+                }
+            }
+
+            setTimeout(() => {
+                steve.classList.remove('atacando');
+            }, 200);
+        });
+
+        // Reduzir cooldown
+        setInterval(() => {
+            if (cooldownAtaque > 0) cooldownAtaque--;
+        }, 1);
+
+        // Eventos de teclado
+        const teclasPressionadas = {};
+
+        document.addEventListener('keydown', (e) => {
+            teclasPressionadas[e.key.toLowerCase()] = true;
+
+            if (e.key === ' ') {
+                if (!emGravidade) {
+                    velocidadeY = -12;
+                    emGravidade = true;
+                    criarParticula(x + 20, y + 50, '💨');
+                }
+                e.preventDefault();
+            }
+
+            if (e.key === 'Shift') {
+                velocidadeY = -20;
+                criarParticula(x + 20, y + 50, '⭐');
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            teclasPressionadas[e.key.toLowerCase()] = false;
+        });
+
+        // Processar movimento por teclado
+        function processarTeclado() {
+            const vel = 5;
+
+            if (teclasPressionadas['arrowleft'] || teclasPressionadas['a']) {
+                velocidadeX = -vel;
+            }
+            if (teclasPressionadas['arrowright'] || teclasPressionadas['d']) {
+                velocidadeX = vel;
+            }
+            if (teclasPressionadas['arrowup'] || teclasPressionadas['w']) {
+                y -= vel;
+            }
+
+            // Rotacionar o personagem conforme se move
+            if (velocidadeX !== 0) {
+                steve.style.transform = velocidadeX > 0 ? 'scaleX(1)' : 'scaleX(-1)';
+            }
+        }
+
+        // Arrasto de mouse
+        steve.addEventListener('mousedown', (e) => {
+            arrastando = true;
+            steve.classList.add('grab');
+            ultimoX = e.clientX;
+            ultimoY = e.clientY;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (arrastando) {
+                const deltaX = e.clientX - ultimoX;
+                const deltaY = e.clientY - ultimoY;
+
+                x += deltaX;
+                y += deltaY;
+
+                velocidadeX = deltaX;
+                velocidadeY = deltaY;
+
+                ultimoX = e.clientX;
+                ultimoY = e.clientY;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            arrastando = false;
+            steve.classList.remove('grab');
+        });
+
+        // Clique duplo para pulo super
+        let ultimoClique = 0;
+        steve.addEventListener('dblclick', () => {
+            velocidadeY = -25;
+            criarParticula(x + 20, y + 50, '🚀');
+            criarParticula(x + 20, y + 50, '⭐');
+        });
+
+        // Criar partículas
+        function criarParticula(px, py, emoji) {
+            const particula = document.createElement('div');
+            particula.className = 'particula';
+            particula.textContent = emoji;
+            particula.style.left = px + 'px';
+            particula.style.top = py + 'px';
+            caverna.appendChild(particula);
+
+            setTimeout(() => particula.remove(), 2000);
+        }
+
+        // Loop de animação
+        function loop() {
+            processarTeclado();
+            atualizar();
+            requestAnimationFrame(loop);
+        }
+
+        // Inicializar
+        gerarCaverna();
+        steve.style.left = x + 'px';
+        steve.style.top = y + 'px';
+        atualizarUI();
+        loop();
+
+        // Gerar inimigos periodicamente
+        setInterval(() => {
+            if (inimigosList.length < 8) {
+                const tipo = Math.random() > 0.5 ? 'creeper' : 'zumbi';
+                const novoX = Math.random() > 0.5 ? -50 : window.innerWidth;
+                const novoY = Math.random() * (window.innerHeight - 200);
+                const novoInimigo = new Inimigo(tipo, novoX, novoY);
+                inimigosList.push(novoInimigo);
+                atualizarUI();
+            }
+        }, 3000);
+
+        // Gerar chuva de partículas ocasionalmente
+        setInterval(() => {
+            if (Math.random() > 0.6) {
+                const px = Math.random() * window.innerWidth;
+                const emojis = ['💎', '⚒️', '🪨', '✨', '🔥'];
+                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                criarParticula(px, -10, emoji);
+            }
+        }, 400);
+
+        // Responder a redimensionamento
+        window.addEventListener('resize', () => {
+            if (x > window.innerWidth - 40) x = window.innerWidth - 40;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproduzir vídeo</title>
+    <style>
+        html, body { height: 100%; margin: 0; }
+        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: Arial, Helvetica, sans-serif; background:#f4f4f4; }
+        .wrap { max-width: 960px; width: 95%; text-align: center; padding: 20px; }
+        .player { margin: 0 auto; }
+        iframe { width: 100%; max-width: 900px; height: 506px; border-radius:6px; }
+        .back { display:inline-block; margin-top:16px; padding:8px 14px; background:#333; color:#fff; text-decoration:none; border-radius:6px; }
+        .msg{ color:#444 }
+        @media (max-width:600px){ iframe{ height: 240px; } }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h2 id="title">Reproduzir vídeo</h2>
+        <div class="player" id="playerContainer">
+            <p class="msg">Carregando vídeo...</p>
+        </div>
+        <a class="back" href="index.html">&larr; Voltar</a>
+    </div>
+
+    <script>
+        function getQueryParam(name){
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name);
+        }
+
+        const vid = getQueryParam('v');
+        const container = document.getElementById('playerContainer');
+        const title = document.getElementById('title');
+
+        if(vid){
+            const embed = document.createElement('iframe');
+            embed.setAttribute('src', 'https://www.youtube.com/embed/' + encodeURIComponent(vid) + '?rel=0');
+            embed.setAttribute('title', 'YouTube video player');
+            embed.setAttribute('frameborder', '0');
+            embed.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+            embed.setAttribute('allowfullscreen', '');
+            container.innerHTML = '';
+            container.appendChild(embed);
+            title.textContent = 'Reproduzindo vídeo selecionado';
+        } else {
+            container.innerHTML = '<p class="msg">Nenhum vídeo selecionado. Volte para a página principal e escolha um vídeo.</p>';
+            title.textContent = 'Vídeo não encontrado';
+        }
+    </script>
+</body>
+</html>
