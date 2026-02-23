@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAG</title>
+    <style>
+
+       * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+       }
+
+       html {
+         scroll-behavior: smooth;
+        }
+
+         @keyframes fade {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+        }
+
+        body {
+            background-color: rgb(28, 32, 32);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background-color: rgb(90, 89, 89);
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            color: rgb(179, 214, 214);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1px;
+        }
+
+       .btt {
+        display: inline-block;
+        background-color: rgb(61, 166, 170);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 10px;
+        padding: 2px;
+       }
+
+       .btt:hover {
+        background-color: rgb(28, 98, 100);
+       }
+
+        .bar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            justify-content: space-between;
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        nav > a {
+            background-color: rgb(61, 166, 170);
+            display: flex;
+            padding: 2px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+        }
+
+        nav > a:hover {
+            background-color: rgb(28, 98, 100);
+        }
+
+        nav > h1 {
+            color: white;
+            margin: 0;
+            margin-right: auto;
+        }
+
+        .conteiner {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-direction: row;
+            flex-wrap: wrap;
+            padding-left: 5px;
+            padding: 20px;
+        }
+
+        main {
+         flex: 1;
+        }
+
+        div.caixa {
+            width: 280px;
+            min-height: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 9px;
+            gap: 15px;
+
+            align-items: center;
+            text-align: center;
+            box-shadow: 5px 4px 10px  black;
+
+            display: flex;
+            flex-direction: column;
+            
+            animation-name: fade;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+            transition: transform 0.3s ease-in, box-shadow  0.3s ease-in;
+        }
+
+        div.caixa:hover {
+            transform: scale(1.01);
+            box-shadow: 8px 3px 5px rgba(0, 0, 0, 0.658);
+        }
+
+        .caixa img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        button {
+            background-color: rgb(101, 188, 190);
+            color: rgb(255, 255, 255);
+            border: none;
+            cursor: pointer;
+            transition: 0.2s ease-in-out;
+            width: 100%;
+            padding: 5px;
+            transition: transform 0.3s ease-in;
+        }
+
+        button:hover {
+            background-color: rgb(53, 92, 94);
+            transform: scale(1.05);
+        }
+
+        footer {
+            background-color:  rgb(90, 89, 89);
+            color: rgb(255, 255, 255);
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="bar">
+        <h1>Joao</h1>
+       <a href="#">Home</a>
+       <a href="#">sobre</a>
+       <a href="#">contato</a>
+    </nav>
+</header>
+    <main>
+        <section class="hero">
+            <h1> opa sou o Joao Pedro</h1>
+            <p>Gosto muito De Programar</p>
+            <a href="#cards" class="btt">Ver Projetos</a>
+        </section>
+        <section id="cards" class="conteiner">
+        <div class="caixa">
+            <img src="cc.png" alt="cc">
+            <h1>Joao Santos</h1>
+            <p>Futuro Programador</p>
+            <button>Começar</button>
+        </div>
+        <div class="caixa">
+            <img src="cc.png" alt="cc">
+            <h1>Joao Santos</h1>
+            <p>Futuro Programador</p>
+            <button>Começar</button>
+        </div>
+        <div class="caixa">
+           <img src="cc.png" alt="cc">
+            <h1>Joao Santos</h1>
+            <p>Futuro Programador</p>
+            <button>Começar</button>
+        </div>
+        </section>
+    </main>
+    <footer>
+        Feito por joao pedro
+    </footer>
+</body>
+</html>
